@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>{{ user.username }}'s Profile</h2>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ user.profile.image.url }}" class="rounded-circle img-thumbnail mb-3" alt="Profile Picture" width="150" height="150">
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_bio" class="form-label">Bio</label>
+                            {{ form.bio }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_image" class="form-label">Profile Picture</label>
+                            {{ form.image }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                {% comment %} <a href="{% url 'password_change' %}" class="btn btn-warning">Change Password</a> {% endcomment %}
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -5,38 +5,45 @@
   <div class="col-md-6 mx-auto">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h2 class="text-center mb-4">Login</h2>
+        <h2 class="text-center mb-4">Register account</h2>
         <form method="POST">
           {% csrf_token %}
-          <div class="form-floating mb-3">
-            <input
-              type="text"
-              class="form-control"
-              id="id_username"
-              placeholder="Username" name="username"
-            />
-            <label for="id_username" class="form-label">Username</label>
-          </div>
-          <div class="form-floating mb-3">
-            <input
-              type="password"
-              class="form-control"
-              id="id_password"
-              placeholder="Password" name="password"
-            />
-            <label for="id_password" class="form-label">Password</label>
-          </div>
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-danger" role="alert">
-                {{ message }}
+          <input type="hidden" name="csrfmiddlewaretoken" value="L1d5oaBLlUw5qlP33FgPDBjRMc4OmSpmtQY43mdnqCuJfEibVhaCi4Wt26vEiiJB">
+            <div class="mb-4">
+              <div class="form-floating mb-3">
+                <input type="text" name="username" class="form-control rounded ps-3" placeholder="Username" maxlength="150" autofocus="" required="" aria-describedby="id_username_helptext" id="id_username">
+                <label for="id_username" class="text-secondary mb-3">Username</label>
+                 
               </div>
-            {% endfor %}
-          {% endif %}
-          <button type="submit" class="btn btn-primary">Login</button>
-          <a href="{% url 'register' %}" class="text-secondary ms-3"
-            >Need an account?</a
-          >
+
+            <div class="form-floating mb-3">
+                <input type="email" name="email" class="form-control rounded ps-3" placeholder="Email" maxlength="254" id="id_email">
+                <label for="id_email" class="text-secondary mb-3">Email</label>
+               
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" name="password1" class="form-control rounded" placeholder="Password" required="" id="id_password1">
+              <label for="id_password1" class="text-secondary mb-3">Password</label>
+               
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" name="password2" class="form-control rounded" placeholder="Confirm Password" required="" id="id_password2">
+              <label for="id_password2" class="text-secondary mb-3">Confirm Password</label>
+               
+            </div>
+          </div>
+            <!-- Register Form buttons -->
+          <div class="d-flex justify-content-end gap-2 mx-3 mt-4">
+            <a href="/user_login/" class="bg-secondary p-2 border border-secondary rounded text-white text-decoration-none">
+              Already have an account?
+            </a>
+            <form method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+          </div>
         </form>
       </div>
     </div>

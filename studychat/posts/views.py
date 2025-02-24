@@ -1,17 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Post
+from .models import Post, Comment
 from .forms import PostForm  
 from django.contrib import messages
 
 def home(request):
-    # posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'posts/home.html', {})
-# ------ User Profile --------
-@login_required
-def profile(request):
-    user_posts = Post.objects.filter(author=request.user).order_by('-created_at')
-    return render(request, 'posts/profile.html', {'posts': user_posts})
+    posts = Post.objects.all().order_by('-created_at')
+    is_liked = False
+    return render(request, 'posts/home.html', {'posts' : posts, 'is_liked': is_liked})
+
 # ------- Create Post --------
 @login_required
 def post_create(request):
@@ -51,3 +48,25 @@ def post_delete(request, pk):
         messages.success(request, 'Post deleted successfully!')
         return redirect('profile')
     return render(request, 'posts/post_confirm_delete.html', {'post': post})
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(post=post, user=request.user, content=content)
+            messages.success(request, "Your comment has been added!")
+        else:
+            messages.error(request, "Comment cannot be empty.")
+    return redirect('home')
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if post.likes.filter(id=request.user.id):
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect('home')

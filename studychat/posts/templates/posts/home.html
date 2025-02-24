@@ -3,6 +3,75 @@
 {% block title %}Home{% endblock %}
 <!--- content-->
 {% block content %}
-  <h2>Home</h2>
-  <p>Welcome to the home page!</p>
+<div class="row justify-content-center">
+  {% for post in posts %}
+    <div class="col-md-8 col-lg-8 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.author.username }}</h5>
+          <div class="text-muted">
+            {{ post.created_at|date:"F d, Y" }}
+          </div>
+          {% if post.content|length > 200 %}
+            {% with truncated=post.content|slice:":200" %}
+              <p class="card-text" id="post-text-{{ post.id }}" 
+                 data-full="{{ post.content|escapejs }}" 
+                 data-truncated="{{ truncated|escapejs }}">
+                {{ truncated }}... 
+                <a href="#" onclick="toggleText({{ post.id }}); return false;" id="toggle-link-{{ post.id }}">see more</a>
+              </p>
+            {% endwith %}
+          {% else %}
+            <p class="card-text">{{ post.content }}</p>
+          {% endif %}
+          {% if post.image %}
+            <img src="{{ post.image.url }}" class="img-fluid mt-3" alt="Post Image">
+          {% endif %}
+          <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Like Button -->
+              {% if not is_liked %}
+              <a href="" class="btn btn-sm btn-outline-success">Like</a>
+              {% else %}
+              <a href="{% url 'like_post' post.id %}" class="btn btn-success btn-sm">Liked</a>
+              {% endif %}
+              <!-- Comment Button -->
+              <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ post.id }}">
+                Comment ({{ post.comments.count }})
+              </button>
+              <!-- Share Button -->
+              <button class="btn btn-outline-success btn-sm" onclick="sharePost({{ post.id }})">
+                Share
+              </button>
+            </div>
+          </div>
+          <!-- Comments -->
+          <div class="collapse" id="comments-{{ post.id }}">
+            <div class="card card-body">
+              <h6>Comments:</h6>
+              {% for comment in post.comments.all %}
+                <div class="mb-2">
+                  <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+                  <small class="text-muted">({{ comment.created_at|date:"M d, Y H:i" }})</small>
+                </div>
+              {% empty %}
+                <p>No comments yet.</p>
+              {% endfor %}
+              <form method="POST" action="{% url 'add_comment' post.id %}">
+                {% csrf_token %}
+                <div class="input-group mt-2">
+                  <input type="text" name="content" class="form-control" placeholder="Add a comment...">
+                  <button class="btn btn-outline-secondary" type="submit">Post</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center">No posts available.</p>
+  {% endfor %}
+</div>
+
 {% endblock %}
