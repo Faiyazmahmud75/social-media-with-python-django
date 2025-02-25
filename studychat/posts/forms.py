@@ -7,11 +7,11 @@ class PostForm(forms.ModelForm):
         fields = ['content', 'image']
         widgets = {
             'content': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'What\'s on your mind?',
-                'rows': 5
+                'class': 'form-control', 
+                'rows': 4,
+                'placeholder': "What's on your mind?"
             }),
             'image': forms.ClearableFileInput(attrs={
-                'class': 'form-control-file'
+                'class': 'form-control'
             }),
         }

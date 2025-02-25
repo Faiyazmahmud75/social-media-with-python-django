@@ -17,7 +17,7 @@ function toggleText(postId) {
 function sharePost(postId) {
     // Placeholder: Replace with proper share functionality
     var dummyInput = document.createElement('input');
-    var postUrl = window.location.origin + '/post/' + postId; // adjust URL pattern as needed
+    var postUrl = window.location.origin + '/post/' + postId;
     dummyInput.value = postUrl;
     document.body.appendChild(dummyInput);
     dummyInput.select();

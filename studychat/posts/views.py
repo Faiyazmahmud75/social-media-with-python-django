@@ -6,8 +6,7 @@ from django.contrib import messages
 
 def home(request):
     posts = Post.objects.all().order_by('-created_at')
-    is_liked = False
-    return render(request, 'posts/home.html', {'posts' : posts, 'is_liked': is_liked})
+    return render(request, 'posts/home.html', {'posts' : posts})
 
 # ------- Create Post --------
 @login_required
@@ -15,14 +14,22 @@ def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
+            form.instance.author = request.user
+            form.save()
             messages.success(request, 'Post created successfully!')
             return redirect('home')
     else:
         form = PostForm()
-    return render(request, 'posts/post_form.html', {'form': form})
+    return render(request, 'posts/home.html', {'create_form': form})
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments = Comment.objects.filter(post=post)
+    is_liked = False
+    if post.likes.filter(id=request.user.id):
+        is_liked = True
+    return render(request, 'posts/detail_post.html', {'post': post, 'comments': comments, 'is_liked': is_liked})
 
 # ------- Update Post --------
 @login_required
@@ -33,10 +40,10 @@ def post_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Post updated successfully!')
-            return redirect('profile')
+            return redirect('home')
     else:
         form = PostForm(instance=post)
-    return render(request, 'posts/post_form.html', {'form': form})
+    return render(request, 'posts/post_form.html', {'edit_form': form})
 
 
 # ------- Delete Post --------
@@ -46,8 +53,8 @@ def post_delete(request, pk):
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'Post deleted successfully!')
-        return redirect('profile')
-    return render(request, 'posts/post_confirm_delete.html', {'post': post})
+        return redirect('home')
+    return render(request, 'posts/detail_post.html', {'post': post})
 
 @login_required
 def add_comment(request, post_id):
@@ -59,6 +66,14 @@ def add_comment(request, post_id):
             messages.success(request, "Your comment has been added!")
         else:
             messages.error(request, "Comment cannot be empty.")
+    return redirect('home')
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, "Comment deleted successfully!")
     return redirect('home')
 
 @login_required
