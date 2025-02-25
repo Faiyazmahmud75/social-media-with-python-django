@@ -6,7 +6,8 @@ from django.contrib import messages
 
 def home(request):
     posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'posts/home.html', {'posts' : posts})
+    form = PostForm()
+    return render(request, 'posts/home.html', {'posts': posts, 'create_form': form})
 
 # ------- Create Post --------
 @login_required
@@ -29,7 +30,8 @@ def post_detail(request, pk):
     is_liked = False
     if post.likes.filter(id=request.user.id):
         is_liked = True
-    return render(request, 'posts/detail_post.html', {'post': post, 'comments': comments, 'is_liked': is_liked})
+    form = PostForm(instance=post)
+    return render(request, 'posts/detail_post.html', {'post': post, 'comments': comments, 'is_liked': is_liked, 'edit_form': form})
 
 # ------- Update Post --------
 @login_required
@@ -40,10 +42,10 @@ def post_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Post updated successfully!')
-            return redirect('home')
+            return redirect('post_detail', pk=pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'posts/post_form.html', {'edit_form': form})
+    return render(request, 'posts/detail_post.html', {'post': post, 'edit_form': form})
 
 
 # ------- Delete Post --------

@@ -34,12 +34,6 @@
               <i class="fa-regular fa-id-badge"></i>
             </a>
           </li>
-          <!--Create Post-->
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createPostModal">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </a>
-          </li>
           <!--Search Bar-->
           <li class="nav-item">
             <form class="d-flex bg-success bg-gradient rounded-pill search-bar" role="search">
@@ -64,7 +58,7 @@
               </li>
               <li><hr class="dropdown-divider"></li>
               <li>
-                <form method="POST" action="{% url 'logout' %}">
+                <form method="POST" action="{% url 'user_logout' %}">
                   {% csrf_token %}
                   <button type="submit" class="dropdown-item">Logout</button>
                 </form>
@@ -73,7 +67,7 @@
           </li>
           {% else %}
           <li class="nav-item" title="Login">
-            <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i></a>
+            <a class="nav-link" href="{% url 'user_login' %}"><i class="fa-solid fa-right-to-bracket"></i></a>
           </li>
           <li class="nav-item" title="Register">
             <a class="nav-link" href="{% url 'register' %}"><strong>Register</strong></a>
@@ -97,23 +91,6 @@
 
       {% block content %}
       {% endblock %}
-    </div>
-    <!-- Modal For post creation -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="createPostModalLabel">Create Post</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form method="POST" action="{% url 'post_create' %}" enctype="multipart/form-data">
-              {% csrf_token %}
-              {% include "posts/_post_form.html" with form=create_form %}
-            </form>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Footer -->

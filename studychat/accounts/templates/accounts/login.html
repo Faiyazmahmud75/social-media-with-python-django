@@ -13,7 +13,7 @@
               type="text"
               class="form-control"
               id="id_username"
-              placeholder="Username" name="username"
+              placeholder="Username" name="username" required
             />
             <label for="id_username" class="form-label">Username</label>
           </div>
@@ -22,18 +22,19 @@
               type="password"
               class="form-control"
               id="id_password"
-              placeholder="Password" name="password"
+              placeholder="Password" name="password" required
             />
             <label for="id_password" class="form-label">Password</label>
           </div>
           {% if messages %}
             {% for message in messages %}
-              <div class="alert alert-danger" role="alert">
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
             {% endfor %}
           {% endif %}
-          <button type="submit" class="btn btn-primary">Login</button>
+          <button type="submit" class="btn btn-success">Login</button>
           <a href="{% url 'register' %}" class="text-secondary ms-3"
             >Need an account?</a
           >

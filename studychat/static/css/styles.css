@@ -3,7 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+body{
+    background: rgb(145, 145, 145);
+}
 .nav-item {
     display: flex;
     align-items: center;
@@ -15,7 +17,7 @@
 }
 
 .nav-item input {
-    width: 90px;
+    width: 120px;
     border: none;
     outline: none;
     color: #97c9b2;
