@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from .forms import PostForm  
 from django.contrib import messages
+from django.db.models import Q
 
 def home(request):
     posts = Post.objects.all().order_by('-created_at')
@@ -87,3 +88,13 @@ def like_post(request, post_id):
     else:
         post.likes.add(request.user)
     return redirect('home')
+
+
+def post_search(request):
+    query = request.GET.get('q', '')  # Get the search query from the request
+    results = Post.objects.filter(content__icontains=query) | Post.objects.filter(author__username__icontains=query)
+    
+    print("Search Query:", query)  # Debugging
+    print("Search Results:", results)  # Debugging
+    
+    return render(request, 'posts/search_results.html', {'query': query, 'results': results})

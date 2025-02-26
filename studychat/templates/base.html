@@ -36,8 +36,9 @@
           </li>
           <!--Search Bar-->
           <li class="nav-item">
-            <form class="d-flex bg-success bg-gradient rounded-pill search-bar" role="search">
-              <input class="form-control me-2 bg-success bg-gradient rounded-pill" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex bg-success bg-gradient rounded-pill search-bar" role="search" action="{% url 'post_search' %}" method="GET">
+              {% csrf_token %}
+              <input class="form-control me-2 bg-success bg-gradient rounded-pill" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ query}}">
               <button type="submit" class="search-btn rounded"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
           </li>
@@ -49,7 +50,7 @@
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="{{ user.profile.image.url }}" alt="Profile" class="rounded-circle" width="30" height="30">
+              <img src="{{ user.profile.image.url }}" alt="Profile" class="rounded-circle" width="40" height="40">
               <span class="ms-2"><strong>{{ user.username }}</strong></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

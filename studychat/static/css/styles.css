@@ -3,9 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
-body{
+/* body{
     background: rgb(145, 145, 145);
-}
+} */
 .nav-item {
     display: flex;
     align-items: center;

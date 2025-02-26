@@ -13,7 +13,7 @@
             <a href="{% url 'home' %}" class="text-secondary"><i class="fa-solid fa-arrow-left"></i></a>
             {{ post.created_at }}
           </div>
-          {% if user.is_authenticated %}
+          {% if user == post.author %}
           <div class="mb-3">
             <!-- Edit Button-->
               <button type="button" class="p-1 btn btn-sm btn-outline-success" title="Edit Post" data-bs-toggle="modal" data-bs-target="#editPostModal"><i class="fa-solid fa-file-pen fs-4"></i></button>
@@ -81,7 +81,7 @@
                 </div>
               </form>
               {% else %}
-                <p class="mt-2"><a href="{% url 'login' %}">Login</a> to add a comment.</p>
+                <p class="mt-2"><a href="{% url 'user_login' %}">Login</a> to add a comment.</p>
             {% endif %}
           </div>
         </div>

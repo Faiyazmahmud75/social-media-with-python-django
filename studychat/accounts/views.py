@@ -26,7 +26,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is None:
             messages.error(request, 'Invalid username or password. Please try again.')
-            return redirect('user_login')
+            return render(request, 'user_login', {})
         else:
             login(request, user)
             return redirect('home')
