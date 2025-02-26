@@ -6,7 +6,25 @@ from django.contrib import messages
 from django.db.models import Q
 
 def home(request):
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.all()
+# Filter parameters    
+    order = request.GET.get('order', 'latest')
+    media_type = request.GET.get('media', 'all')
+    owner = request.GET.get('owner', '')
+# Filter by date
+    if order == 'latest':
+        posts = posts.order_by('-created_at')
+    elif order == 'oldest':
+        posts = posts.order_by('created_at')
+# Filter by media
+    if media_type == 'text-only':
+        posts = posts.filter(Q(image__isnull=True) | Q(image=''))
+    elif media_type == 'images':
+        posts = posts.filter(image__isnull=False).exclude(image='')
+# Filter by owner
+    if owner:
+        posts = posts.filter(author__username__icontains=owner)
+
     form = PostForm()
     return render(request, 'posts/home.html', {'posts': posts, 'create_form': form})
 
@@ -43,7 +61,7 @@ def post_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Post updated successfully!')
-            return redirect('post_detail', pk=pk)
+            return redirect(request.META.get('HTTP_REFERER', 'post_detail'))
     else:
         form = PostForm(instance=post)
     return render(request, 'posts/detail_post.html', {'post': post, 'edit_form': form})
@@ -56,7 +74,7 @@ def post_delete(request, pk):
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'Post deleted successfully!')
-        return redirect('home')
+        return redirect(request.META.get('HTTP_REFERER', 'home'))
     return render(request, 'posts/detail_post.html', {'post': post})
 
 @login_required
@@ -69,7 +87,7 @@ def add_comment(request, post_id):
             messages.success(request, "Your comment has been added!")
         else:
             messages.error(request, "Comment cannot be empty.")
-    return redirect('home')
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 @login_required
 def delete_comment(request, comment_id):
@@ -81,20 +99,21 @@ def delete_comment(request, comment_id):
 
 @login_required
 def like_post(request, post_id):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to like a post.")
+        return redirect('login')
+    
     post = get_object_or_404(Post, id=post_id)
 
     if post.likes.filter(id=request.user.id):
         post.likes.remove(request.user)
     else:
         post.likes.add(request.user)
-    return redirect('home')
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 
 def post_search(request):
-    query = request.GET.get('q', '')  # Get the search query from the request
+    query = request.GET.get('q', '')
     results = Post.objects.filter(content__icontains=query) | Post.objects.filter(author__username__icontains=query)
-    
-    print("Search Query:", query)  # Debugging
-    print("Search Results:", results)  # Debugging
     
     return render(request, 'posts/search_results.html', {'query': query, 'results': results})

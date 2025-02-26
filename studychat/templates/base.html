@@ -30,10 +30,11 @@
           <!--Profile-->
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'profile' %}">
+            <a class="nav-link" href="{% url 'profile' username=user.username %}">
               <i class="fa-regular fa-id-badge"></i>
             </a>
           </li>
+          {% endif %}
           <!--Search Bar-->
           <li class="nav-item">
             <form class="d-flex bg-success bg-gradient rounded-pill search-bar" role="search" action="{% url 'post_search' %}" method="GET">
@@ -42,7 +43,6 @@
               <button type="submit" class="search-btn rounded"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
           </li>
-          {% endif %}
         </ul>
     
         <!-- Right: User Dropdown -->
@@ -55,7 +55,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li>
-                <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                <a class="dropdown-item" href="{% url 'profile' username=user.username %}">Profile</a>
               </li>
               <li><hr class="dropdown-divider"></li>
               <li>
@@ -68,7 +68,7 @@
           </li>
           {% else %}
           <li class="nav-item" title="Login">
-            <a class="nav-link" href="{% url 'user_login' %}"><i class="fa-solid fa-right-to-bracket"></i></a>
+            <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i></a>
           </li>
           <li class="nav-item" title="Register">
             <a class="nav-link" href="{% url 'register' %}"><strong>Register</strong></a>
@@ -79,7 +79,7 @@
     </nav>    
 
     <!-- Main Content -->
-    <div class="container my-5 py-5">
+    <div class="container my-5 pb-5">
       <!-- Django messages -->
       {% if messages %}
         {% for message in messages %}
@@ -97,7 +97,7 @@
     <!-- Footer -->
     <footer class="fixed-bottom bg-dark text-center text-lg-start mt-5 text-light">
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-        &copy; {% now "Y" %} Social Media App. All rights reserved.
+        &copy; {% now "Y" %} <a href="#">Classbook</a> Social Media App All rights reserved. Made with L💚VE by <a href="#">Faiyaz</a>
       </div>
     </footer>
 

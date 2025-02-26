@@ -43,3 +43,17 @@
     font-size: 1.8rem;
     padding: 2px;
 }
+.cover-photo {
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 5px;
+  }
+  .profile-picture {
+    border: 5px solid #dee2e6;
+    margin-top: -75px;
+    height: 150px;
+  }
+  .profile-info {
+    padding-top: 20px;
+  }

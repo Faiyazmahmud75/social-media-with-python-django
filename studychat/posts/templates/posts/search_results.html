@@ -1,4 +1,4 @@
-<html><head></head><body>{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Search Results{% endblock title %}
 {% block content %}
   <h2>Search Results for "{{ query }}"</h2>
@@ -68,7 +68,7 @@
                       </div>
                     </form>
                     {% else %}
-                      <p class="mt-2"><a href="{% url 'user_login' %}">Login</a> to add a comment.</p>
+                      <p class="mt-2"><a href="{% url 'login' %}">Login</a> to add a comment.</p>
                   {% endif %}
                 </div>
               </div>
@@ -82,4 +82,3 @@
 
 
   {% endblock %}
-</body></html>

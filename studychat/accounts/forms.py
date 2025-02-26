@@ -17,11 +17,12 @@ class UserRegistrationForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'image']
+        fields = ['bio', 'image', 'cover_photo', 'location']
         widgets = {
             'bio': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
                 'placeholder': 'Tell us about yourself'
             }),
+            
         }
