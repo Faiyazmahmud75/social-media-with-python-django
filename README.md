@@ -6,7 +6,8 @@ This is a simple social media web app built using Django.
 
 **ER Diagram of the project**
 <br> <br>
-![image](https://github.com/user-attachments/assets/4d9d57bf-c1ea-45bb-8ca5-ebb2a7c658e0)
+![image](https://github.com/user-attachments/assets/83019e8d-7a8c-4787-bebd-0cd2117d6815)
+
 ## User Credentials for Testing
 
 - **Admin User:**
