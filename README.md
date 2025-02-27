@@ -40,7 +40,7 @@ Follow these steps to set up and run the application locally:
    - On macOS/Linux:
      ```bash
      source venv/bin/activate
-     ```pip
+     ```
 4. **Navigate to the project directoory**
    - ```bash
      cd studychat
