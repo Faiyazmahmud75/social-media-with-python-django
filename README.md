@@ -21,9 +21,9 @@ This is a simple social media web app built using Django.
 
 Follow these steps to set up and run the application locally:
 
-1. **Clone the repository:**
+1. **Clone the repository and navigate to the new directory:**
    ```bash
-   git clone https://github.com/Faiyazmahmud75/social-media-with-python-django.git
+   git clone -b master https://github.com/Faiyazmahmud75/social-media-with-python-django.git
    cd social-media-with-python-django
    ```
 
@@ -35,29 +35,22 @@ Follow these steps to set up and run the application locally:
 3. **Activate the virtual environment:**
    - On Windows:
      ```bash
-     venv\Scripts\activate
+     venv/Scripts/activate
      ```
    - On macOS/Linux:
      ```bash
      source venv/bin/activate
+     ```pip
+4. **Navigate to the project directoory**
+   - ```bash
+     cd studychat
      ```
-
-4. **Install the required dependencies:**
+5. **Install the required dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-5. **Apply the database migrations:**
-   ```bash
-   python manage.py migrate
-   ```
-
-6. **Create a superuser:**
-   ```bash
-   python manage.py createsuperuser
-   ```
-
-7. **Run the development server:**
+6. **Run the development server:**
    ```bash
    python manage.py runserver
    ```
