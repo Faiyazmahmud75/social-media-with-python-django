@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mb-5 py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Notifications</h2>
+        <div class="notification-actions">
+            <button id="mark-all-read" class="btn btn-sm btn-outline-secondary me-2">Mark all as read</button>
+            <button id="clear-all" class="btn btn-sm btn-outline-danger">Clear all notifications</button>
+        </div>
+    </div>
+
+    <div id="notification-container">
+    {% if notifications %}
+        <ul id="notification-list list-style-none p-0">
+            {% for notification in notifications %}
+                <li class="notification-card mb-2 {% if not notification.read %}unread{% endif %}" data-id="{{ notification.id }}">
+
+                    <a href="{{ notification.url|default:'#' }}" class="notification-link" data-id="{{ notification.id }}">
+                        <div class="notification-card-body">
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <div class="d-flex justify-content-start position-relative">
+                                        <img src="{{ notification.sender_image }}" class="rounded-circle me-2" width="40" height="40" alt="User Image" style="object-fit: cover;">
+                                        <span class="badge event-icon">
+                                            {% if notification.notification_type == 'like' %}
+                                            <i class="bi bi-heart-fill text-danger"></i>
+                                            {% elif notification.notification_type == 'comment' %}
+                                            <i class="bi bi-chat-dots-fill"></i>
+                                            {% elif notification.notification_type == 'friend_request' %}
+                                            <i class="bi bi-people-fill text-info"></i>
+                                            {% elif notification.notification_type == 'friend_accepted' %}
+                                            <i class="bi bi-person-fill-check text-success"></i>
+                                            {% elif notification.notification_type == 'mention' %}
+                                            <i class="bi bi-at text-info"></i>
+                                            {% else %}
+                                            <i class="bi bi-bell"></i>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h5 class="notification-title">{{ notification.content }}</h5>
+                                        <p class="notification-info">On {{ notification.timestamp|date:"F j, Y, g:i a" }}</p>
+                                    </div>
+                                </div>
+                                
+                                {% if not notification.read %}
+                                    <div class="badge badge-pill my-bg-primary rounded-pill">New</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="no-notification alert alert-light text-center p-4" role="alert">
+            <i class="bi bi-bell-slash" style="font-size: 2rem;"></i> No new notifications
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+<script>
+    // Set global variables for the external JS
+    window.websocketUrl = "{{ request.scheme }}://{{ request.get_host }}/ws/notifications/";
+    window.csrfToken = "{{ csrf_token }}";
+    window.unreadCount = {{ unread_count }};
+</script>
+
+{% endblock %}

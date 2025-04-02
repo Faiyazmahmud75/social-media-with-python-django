@@ -1,0 +1,75 @@
+<!-- Profile Settings Page -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+
+<div class="container py-5 mb-5">
+    <div class="profile-settings-container">
+        <h2 class="settings-title">Profile Settings</h2>
+
+        <div class="profile-pic-section">
+            <img id="profileImagePreview" src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+        </div>
+
+        <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+
+            <!-- Profile Image Upload -->
+            <input type="file" name="image" id="imageUpload" class="file-input">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Username</label>
+                    <input type="text" value="@{{ user.username }}" class="input-field" disabled readonly>
+                </div>
+                <div class="col-md-6">
+                    <label>Email</label>
+                    {{ profile_form.email }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>First Name</label>
+                    {{ profile_form.first_name }}
+                </div>
+                <div class="col-md-6">
+                    <label>Last Name</label>
+                    {{ profile_form.last_name }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Gender</label>
+                    {{ profile_form.gender }}
+                </div>
+                <div class="col-md-6">
+                    <i class="bi bi-geo-alt me-1"></i><label>Location</label>
+                    {{ profile_form.location }}
+                </div>
+            </div>
+
+            <label>Bio</label>
+            {{ profile_form.bio }}
+
+            <div class="row justify-content-evenly align-items-center">
+                <div class="col-md-3 text-center">
+                    <label><i class="bi bi-calendar2-plus me-2"></i> Date Joined</label>
+                    <input type="text" value="{{ user.date_joined|date:'F d, Y' }}" class="input-field rounded-pill text-center form-control-sm mt-1" readonly>
+                </div>
+                <div class="col-sm-5">
+                    <a href="{% url 'change_password' %}" class="btn btn-outline-danger btn-sm mt-2">Change Password</a>
+                </div>
+            </div>
+
+            <button type="submit" class="mt-2 save-btn bg-link">Save Changes</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

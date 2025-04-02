@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% comment %} {% load static %} {% endcomment %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Connections</h2>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-3" id="friendsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button">Connection Requests</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="suggestions-tab" data-bs-toggle="tab" data-bs-target="#suggestions" type="button">Suggestions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends" type="button">Connections</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="sent-requests-tab" data-bs-toggle="tab" data-bs-target="#sent-requests" type="button">
+                Sent Requests
+            </button>
+        </li>
+        
+    </ul>
+
+    <div class="tab-content">
+        <!-- Friend Requests Tab -->
+        <div class="tab-pane fade show active" id="requests">
+            <div class="row">
+                {% for request in friend_requests %}
+                    <div class="col-md-5">
+                        <div class="card p-3 mb-3 shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <a href="{% url 'profile' request.from_user.username %}" class="text-decoration-none">
+                                <img src="{{ request.from_user.profile.image.url }}" class="rounded-circle me-3" width="50" height="50" alt="Profile">
+                                </a>
+                                <div>
+                                    <a href="{% url 'profile' request.from_user.username %}" class="txt-link text-decoration-none text-capitalize">
+                                        <h6 class="mb-2">{{ request.from_user.username }}</h6>
+                                    </a>
+                                    <form method="POST" action="{% url 'accept_request' request.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm accept-btn"><i class="bi bi-person-check-fill me-1"></i>Accept</button>
+                                    </form>
+                                    <form method="POST" action="{% url 'decline_request' request.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-handshake-slash me-1 "></i>Decline</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h3 class="text-center">No incoming requests</h3>
+                {% endfor %}
+            </div>
+        </div>
+
+<!-- Friend Suggestions Tab -->
+<div class="tab-pane fade" id="suggestions">
+    <div class="row">
+        {% for user in friend_suggestions %}
+            <div class="col-md-4">
+                <div class="card p-3 mb-3 shadow-sm">
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'profile' user.username %}">
+                        <img src="{{ user.profile.image.url }}" class="rounded-circle me-3" width="50" height="50" alt="Profile">
+                        </a>
+                        <div>
+                            <a href="{% url 'profile' user.username %}" class="text-capitalize txt-link text-decoration-none">
+                            <h6 class="mb-2">{{ user.username }}</h6>
+                            </a>
+                            {% if user in sent_requests %}
+                                <!-- If request is already sent, show cancel button -->
+                                <form method="POST" action="{% url 'cancel_request' sent_requests.user.id %}" class="freind-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning btn-sm">Cancel Request</button>
+                                </form>
+                            {% else %}
+                                <!-- Otherwise, show connect button -->
+                                <form method="POST" action="{% url 'send_request' user.username %}" class="freind-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn accept-btn btn-sm"><i class="bi bi-person-plus-fill me-1"></i>Connect</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <h3 class="text-center">No suggestions at the moment</h3>
+        {% endfor %}
+    </div>
+</div>
+<!--Sent Requests-->
+<div class="tab-pane fade" id="sent-requests">
+    <div class="row">
+        {% for request in sent_requests %}
+            <div class="col-md-4">
+                <div class="card p-3 mb-3 shadow-sm">
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'profile' request.to_user.username %}" class="text-success">
+                            <img src="{{ request.to_user.profile.image.url }}" class="rounded-circle me-3" width="50" height="50" alt="Profile">
+                        </a>
+                        <div>
+                            <a href="{% url 'profile' request.to_user.username %}" class="txt-link text-decoration-none text-capitalize">
+                                <h6 class="mb-2">{{ request.to_user.username }}</h6>
+                            </a>
+                            <form method="POST" action="{% url 'cancel_request' request.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="bi bi-person-x-fill fs-6 me-1"></i>Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <h3 class="text-center">No sent requests</h3>
+            {% endfor %}
+         </div>
+      </div>
+
+
+        <!-- Friends List Tab -->
+        <div class="tab-pane fade" id="friends">
+            <div class="row">
+                {% for friend in friends %}
+                    <div class="col-md-4">
+                        <div class="card p-3 mb-3 shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <a href="{% url 'profile' friend.username %}">
+                                <img src="{{ friend.profile.image.url }}" class="rounded-circle me-3" width="50" height="50" alt="Profile">
+                                </a>
+                                <div>
+                                    <a href="{% url 'profile' friend.username %}" class="text-capitalize txt-link text-decoration-none">
+                                    <h6 class="mb-2">{{ friend.username }}</h6>
+                                    </a>
+                                    <form method="POST" action="{% url 'remove_friend' friend.username %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-person-dash-fill me-2"></i>Disconnect</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h3 class="text-center">You have no connections yet</h3>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+    

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Media Library {% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-primary">Media Library</h2>
+
+    <!-- Filter Options -->
+    <div class="text-center mb-4">
+        <button class="btn btn-outline-primary filter-btn" data-filter="all">All</button>
+        <button class="btn btn-outline-secondary filter-btn" data-filter="image">Images</button>
+        <button class="btn btn-outline-success filter-btn" data-filter="video">Videos</button>
+        <button class="btn btn-outline-warning filter-btn" data-filter="other">Others</button>
+    </div>
+
+    <!-- Media Grid -->
+    <div class="row g-3" id="media-grid">
+        {% for media in media_files %}
+        <div class="col-md-4 media-item" data-type="{% if media.file.url|lower|slice:'-4:' in '.jpg,.png,.gif,.jpeg' %}image{% elif media.file.url|lower|slice:'-4:' in '.mp4,.avi,.mov' %}video{% else %}other{% endif %}">
+            <div class="card shadow-sm">
+                {% if media.file.url|lower|slice:'-4:' in '.jpg,.png,.gif,.jpeg' %}
+                    <img src="{{ media.file.url }}" class="card-img-top img-fluid media-thumbnail" alt="Media Image" data-bs-toggle="modal" data-bs-target="#mediaModal" data-src="{{ media.file.url }}">
+                {% elif media.file.url|lower|slice:'-4:' in '.mp4,.avi,.mov' %}
+                    <video controls class="card-img-top media-thumbnail">
+                        <source src="{{ media.file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {% else %}
+                    <div class="p-3 text-center">
+                        <i class="bi bi-file-earmark"></i>
+                        <p class="small">{{ media.file.name }}</p>
+                        <a href="{{ media.file.url }}" class="btn btn-sm btn-outline-primary" download>Download</a>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <p class="card-text text-muted small">Uploaded: {{ media.uploaded_at|date:"M d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No media files available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal for Viewing Images -->
+<div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Media Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" id="modal-image" class="img-fluid" alt="Media Preview">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Filtering & Lightbox -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Filter functionality
+        document.querySelectorAll(".filter-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let filter = this.getAttribute("data-filter");
+                document.querySelectorAll(".media-item").forEach(item => {
+                    if (filter === "all" || item.getAttribute("data-type") === filter) {
+                        item.style.display = "block";
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+            });
+        });
+
+        // Lightbox functionality
+        document.querySelectorAll(".media-thumbnail").forEach(img => {
+            img.addEventListener("click", function () {
+                document.getElementById("modal-image").src = this.dataset.src;
+            });
+        });
+    });
+</script>
+{% endblock %}

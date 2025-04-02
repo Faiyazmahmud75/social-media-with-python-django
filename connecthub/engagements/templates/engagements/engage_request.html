@@ -1,0 +1,41 @@
+{% if profile_user != request.user %}
+    <div class="d-flex gap-2">
+        {% if sent_request_exists %}
+            <form method="POST" action="{% url 'cancel_request' request_id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="bi bi-person-x-fill fs-6 me-1"></i>Cancel</button>
+            </form>
+        {% elif received_request_exists %}
+         <h6> sents you a connection request
+         </h6>
+            <form method="POST" action="{% url 'accept_request' request_id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm accept-btn"><i class="bi bi-person-check-fill me-1"></i>Accept</button>
+            </form>
+            <form method="POST" action="{% url 'decline_request' request_id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-handshake-slash me-1 "></i>Decline</button>
+            </form>
+        {% elif are_friends %}
+            <div class="btn-group">
+                <button class="btn accept-btn btn-sm">Connected</button>
+                <button type="button" class="btn accept-btn btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" style="min-width: fit-content;">
+                    <li>
+                        <form method="POST" action="{% url 'remove_friend' profile_user.username %}">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item text-danger" style="font-size: 12px; width: fit-content;"><i class="bi bi-person-dash-fill me-2"></i>Disconnect</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            <form method="POST" action="{% url 'send_request' profile_user.username %}">
+                {% csrf_token %}
+                <button type="submit" class="btn accept-btn btn-sm"><i class="bi bi-person-plus-fill me-1"></i>Connect</button>
+            </form>
+        {% endif %}
+    </div>
+{% endif %}
