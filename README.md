@@ -22,7 +22,7 @@ Follow these steps to set up and run the application locally:
 
 1. **Clone the repository and navigate to the new directory:**
    ```bash
-   git clone -b master https://github.com/Faiyazmahmud75/social-media-with-python-django.git
+   git clone https://github.com/Faiyazmahmud75/social-media-with-python-django.git
    cd social-media-with-python-django
    ```
 
@@ -78,3 +78,4 @@ Follow these steps to set up and run the application locally:
 ---
 
 >>>>>>> origin/master
+
